@@ -18,3 +18,18 @@ module sr_flipflop(
     nand(Q_bar, R_CLK, Q);
     
 endmodule
+
+
+module d_flipflop(
+    output wire Q,
+    output wire Q_bar,
+    input wire D,
+    input wire CLK
+    );
+    wire S = D;
+    wire R = ~D;
+    sr_flipflop d (
+    .S(S), .R(R), .CLK(CLK), .Q(Q), .Q_bar(Q_bar)
+    );
+    
+endmodule
