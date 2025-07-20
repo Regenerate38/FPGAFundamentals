@@ -80,7 +80,7 @@ module control_unit(
                         reg_read_addr1 = {6'b0, instruction[1:0]};
                         reg_read_addr2 = 8'b0;
                         reg_write_addr = {6'b0, instruction[3:2]};
-                        alu_op = 4'b0000; 
+                        alu_op = 4'b1111; 
                         next_state = 2'b11;
                    end                     
                    4'b0110: begin // LOADI RD, #imm
@@ -104,7 +104,7 @@ module control_unit(
             // INDIRECT
             2'b10: begin
                 imm_value = instruction;
-                reg_write_addr = {6'b0, instruction[3:2]}; 
+//                reg_write_addr = {6'b0, instruction[3:2]}; 
                 next_state = 2'b11;
             end
             //WRITE RESULT

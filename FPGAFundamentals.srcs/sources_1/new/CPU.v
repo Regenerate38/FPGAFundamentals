@@ -16,7 +16,6 @@ module CPU(
     wire [7:0] reg_read_addr1;
     wire [7:0] reg_read_addr2;
     wire pc_enable;
-    wire pc_inc;
     wire [7:0] jmp_addr;
     wire [7:0] imm_value;
     wire [1:0] state;
@@ -29,7 +28,6 @@ module CPU(
 
     reg [7:0] writeback_data;
     reg [7:0] latched_imm;
-
     reg [7:0] loadi_dest_reg;
     reg [7:0] alu_mov_dest_reg;
     reg loadi_in_flight;
@@ -39,7 +37,7 @@ module CPU(
         .clk(clk),
         .rst(rst),
         .pc_enable(pc_enable),
-        .pc_inc(pc_inc),
+        .pc_inc(state == 2'b00),
         .jmp_addr(jmp_addr),
         .instru_addr(pc_out)
     );
@@ -60,14 +58,14 @@ module CPU(
     control_unit cu_inst(
         .clk(clk),
         .rst(rst),
-        .instruction(instr_reg_out),
+        .instruction(state == 2'b10 ? instruction : instr_reg_out),
         .alu_op(alu_op),
         .reg_write_en(reg_write_en),
         .reg_write_addr(reg_write_addr),
         .reg_read_addr1(reg_read_addr1),
         .reg_read_addr2(reg_read_addr2),
         .pc_enable(pc_enable),
-        .pc_inc(pc_inc),
+        .pc_inc(),
         .jmp_addr(jmp_addr),
         .imm_value(imm_value),
         .state(state)
@@ -96,30 +94,31 @@ module CPU(
             loadi_in_flight <= 1'b0;
     end
 
-    always @(posedge clk or posedge rst) begin
-        if (rst)
-            loadi_dest_reg <= 8'b0;
-        else if (state == 2'b01 && instr_reg_out[7:4] == 4'b0110)
-            loadi_dest_reg <= reg_write_addr;
-    end
+        always @(posedge clk or posedge rst) begin
+            if (rst)
+                loadi_dest_reg <= 8'b0;
+            else if (state == 2'b01 && instr_reg_out[7:4] == 4'b0110)
+                loadi_dest_reg <= {6'b0, instr_reg_out[3:2]};
+        end
+
 
     always @(posedge clk or posedge rst) begin
         if (rst)
             alu_mov_dest_reg <= 8'b0;
         else if (state == 2'b01 && instr_reg_out[7:4] != 4'b0110)
-            alu_mov_dest_reg <= reg_write_addr;
+            alu_mov_dest_reg <= {6'b0, instr_reg_out[3:2]};
     end
 
-    wire [7:0] write_addr_for_writeback = (state == 2'b11 && loadi_in_flight) ?
-        loadi_dest_reg :
-        alu_mov_dest_reg;
-
+    wire [7:0] write_addr_for_writeback =
+        (state == 2'b11 && loadi_in_flight) ? loadi_dest_reg : alu_mov_dest_reg;
+    
     always @(*) begin
-        if (state == 2'b11 && prev_state == 2'b10)
+        if (state == 2'b11 && loadi_in_flight)
             writeback_data = latched_imm;
         else
             writeback_data = alu_result;
     end
+
 
     reg_file rf_inst(
         .clk(clk),
@@ -157,6 +156,7 @@ module CPU(
     assign status_load = (state == 2'b11);
 
 endmodule
+
 
 module status_register(
     input clk,
