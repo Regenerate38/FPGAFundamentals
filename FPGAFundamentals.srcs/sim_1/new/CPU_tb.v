@@ -6,7 +6,7 @@ module cpu_tb;
     reg rst;
     wire [7:0] pc_out;
     wire [7:0] reg_read_data1;
-    wire [7:0] reg_read_data1;
+    wire [7:0] reg_read_data2;
     
     CPU uut(
         .clk(clk),
