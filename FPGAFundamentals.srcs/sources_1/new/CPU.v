@@ -20,6 +20,7 @@ module CPU(
     wire [7:0] jmp_addr;
     wire [7:0] imm_value;
     wire [1:0] state;
+
     wire [7:0] alu_result;
     wire alu_cout;
     wire alu_zero;
@@ -28,6 +29,11 @@ module CPU(
 
     reg [7:0] writeback_data;
     reg [7:0] latched_imm;
+
+    reg [7:0] loadi_dest_reg;
+    reg [7:0] alu_mov_dest_reg;
+    reg loadi_in_flight;
+    reg [1:0] prev_state;
 
     program_counter pc_inst(
         .clk(clk),
@@ -47,7 +53,7 @@ module CPU(
         .instru_out(instr_reg_out),
         .clk(clk),
         .rst(rst),
-        .load_enable(1'b1),
+        .load_enable(state == 2'b00),
         .instru_in(instruction)
     );
 
@@ -74,8 +80,42 @@ module CPU(
             latched_imm <= imm_value;
     end
 
+    always @(posedge clk or posedge rst) begin
+        if (rst)
+            prev_state <= 2'b00;
+        else
+            prev_state <= state;
+    end
+
+    always @(posedge clk or posedge rst) begin
+        if (rst)
+            loadi_in_flight <= 1'b0;
+        else if (state == 2'b01 && instr_reg_out[7:4] == 4'b0110)
+            loadi_in_flight <= 1'b1;
+        else if (state == 2'b11)
+            loadi_in_flight <= 1'b0;
+    end
+
+    always @(posedge clk or posedge rst) begin
+        if (rst)
+            loadi_dest_reg <= 8'b0;
+        else if (state == 2'b01 && instr_reg_out[7:4] == 4'b0110)
+            loadi_dest_reg <= reg_write_addr;
+    end
+
+    always @(posedge clk or posedge rst) begin
+        if (rst)
+            alu_mov_dest_reg <= 8'b0;
+        else if (state == 2'b01 && instr_reg_out[7:4] != 4'b0110)
+            alu_mov_dest_reg <= reg_write_addr;
+    end
+
+    wire [7:0] write_addr_for_writeback = (state == 2'b11 && loadi_in_flight) ?
+        loadi_dest_reg :
+        alu_mov_dest_reg;
+
     always @(*) begin
-        if (state == 2'b11 && (latched_imm != 8'b0))
+        if (state == 2'b11 && prev_state == 2'b10)
             writeback_data = latched_imm;
         else
             writeback_data = alu_result;
@@ -84,7 +124,7 @@ module CPU(
     reg_file rf_inst(
         .clk(clk),
         .reg_write_en(reg_write_en),
-        .reg_write_addr(reg_write_addr),
+        .reg_write_addr(write_addr_for_writeback),
         .reg_write_data(writeback_data),
         .reg_read_addr1(reg_read_addr1),
         .reg_read_addr2(reg_read_addr2),

@@ -104,7 +104,7 @@ module control_unit(
             // INDIRECT
             2'b10: begin
                 imm_value = instruction;
-                reg_write_addr = reg_write_addr; 
+                reg_write_addr = {6'b0, instruction[3:2]}; 
                 next_state = 2'b11;
             end
             //WRITE RESULT
