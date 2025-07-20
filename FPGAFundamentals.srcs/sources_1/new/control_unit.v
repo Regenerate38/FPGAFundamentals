@@ -20,7 +20,7 @@ module control_unit(
    // FETCH=00 , DECODE & EXECUTE=01, INDIRECT=10, WRITE RESULT = 11
 
     always @(*) begin
-        alu_op = 4'b0000;
+        alu_op = 4'b1110;
         reg_write_en = 0;           
         reg_write_addr = 8'b0;      
         reg_read_addr1 = 8'b0;      
@@ -44,8 +44,8 @@ module control_unit(
                    4'b0001: begin // ADD RD, RS
                         reg_read_addr1 = {6'b0, instruction[3:2]};
                         reg_read_addr2 = {6'b0, instruction[1:0]};
-                        alu_op = 4'b0000;
                         reg_write_addr = {6'b0, instruction[3:2]};
+                        alu_op = 4'b0000;
                         next_state = 2'b11;
                    end
                    4'b0010: begin // SUB RD, RS
@@ -84,9 +84,10 @@ module control_unit(
                         next_state = 2'b11;
                    end                     
                    4'b0111: begin // LOADI RD, #imm
-                        pc_inc = 1;
+                        
                         reg_write_addr = {6'b0, instruction[3:2]};
                         alu_op = 4'b1111;  // random alu op
+                        
                         next_state = 2'b10;
                    end
                   
@@ -96,7 +97,7 @@ module control_unit(
                         next_state = 2'b00;
                    end
                    4'b0000: begin // NOP
-                        alu_op = 4'b1111;
+                        alu_op = 4'b1110;
                         next_state = 2'b00;
                    end
                    
@@ -114,6 +115,7 @@ module control_unit(
             
             // INDIRECT
             2'b10: begin
+            pc_inc = 1;
                 imm_value = instruction;
 //                reg_write_addr = {6'b0, instruction[3:2]}; 
                 next_state = 2'b11;
@@ -121,7 +123,7 @@ module control_unit(
             //WRITE RESULT
             2'b11: begin
                 reg_write_en = 1;
-                pc_inc = 1;
+                alu_op = alu_op;
                 reg_write_addr = reg_write_addr; 
                 next_state = 2'b00;
             end 

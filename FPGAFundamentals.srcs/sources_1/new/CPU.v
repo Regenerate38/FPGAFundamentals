@@ -16,6 +16,7 @@ module CPU(
     wire [7:0] reg_read_addr1;
     wire [7:0] reg_read_addr2;
     wire pc_enable;
+    wire pc_inc;
     wire [7:0] jmp_addr;
     wire [7:0] imm_value;
     wire [1:0] state;
@@ -37,7 +38,7 @@ module CPU(
         .clk(clk),
         .rst(rst),
         .pc_enable(pc_enable),
-        .pc_inc(state == 2'b00),
+        .pc_inc(pc_inc),
         .jmp_addr(jmp_addr),
         .instru_addr(pc_out)
     );
@@ -65,7 +66,7 @@ module CPU(
         .reg_read_addr1(reg_read_addr1),
         .reg_read_addr2(reg_read_addr2),
         .pc_enable(pc_enable),
-        .pc_inc(),
+        .pc_inc(pc_inc),
         .jmp_addr(jmp_addr),
         .imm_value(imm_value),
         .state(state)

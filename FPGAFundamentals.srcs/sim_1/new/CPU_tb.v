@@ -25,7 +25,7 @@ module cpu_tb;
     
 initial begin
     forever @(posedge clk) begin
-   $display("time=%0t state=%b reg_write_en=%b reg_write_addr_for_writeback=%h loadi_in_flight=%b loadi_dest_reg=%h alu_mov_dest_reg=%h instr_reg_out=%h", $time, uut.state, uut.reg_write_en, uut.write_addr_for_writeback, uut.loadi_in_flight, uut.loadi_dest_reg, uut.alu_mov_dest_reg, uut.instr_reg_out);
+   $display("time=%0t alu_op=%b alu_result=%b state=%b",$time, uut.alu_op, uut.alu_result, uut.state);
         $display("REGFILE: R0=%h R1=%h R2=%h R3=%h",
             uut.rf_inst.reg_data[0],
             uut.rf_inst.reg_data[1],

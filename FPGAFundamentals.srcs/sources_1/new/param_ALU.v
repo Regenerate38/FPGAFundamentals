@@ -5,7 +5,7 @@
 module param_ALU #(
     parameter WIDTH = 8
 ) (
-    output  [WIDTH-1:0] Out,
+    output [WIDTH-1:0] Out,
     output reg C_out,
     output reg Zero,
     //output reg Overflow,
@@ -27,8 +27,6 @@ module param_ALU #(
         //Overflow = 1'b0;
         Negative = 1'b0;
         C_out = 1'b0;
-        logic_result = 0;
-        arith_result = 0;
             
     case (sel)
     4'b0000: begin // ADD
@@ -60,7 +58,11 @@ module param_ALU #(
     4'b0111: logic_result = A ^ B; // XOR
     4'b1000: logic_result = (A << B); // Logical Shift Left
     4'b1001: logic_result = (A >> B); // Logical Shift Right
-    4'b1001: ;
+    4'b1110: begin
+        logic_result = logic_result;
+        arith_result = arith_result;
+    end  // nop
+    4'b1111: logic_result = A; // for mov
     default: begin
                  logic_result = 0;
                  arith_result = 0;
