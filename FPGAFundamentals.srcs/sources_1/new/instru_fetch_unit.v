@@ -34,16 +34,16 @@ integer i;
 //initial $readmemh("memory.mem", mem_data);
 
  initial begin
-        mem_data[0] = 8'b0110_0000; // LOADI R0, 
-        mem_data[1] = 8'b0110_0011; // Immediate value 63
-        mem_data[2] = 8'b0110_0100; // LOADI R1
+        mem_data[0] = 8'b0111_0000; // LOADI R0, 
+        mem_data[1] = 8'b1111_1111; // Immediate value 63
+        mem_data[2] = 8'b0111_0100; // LOADI R1
         mem_data[3] = 8'b0001_1001; // 19
-        mem_data[4] = 8'b0101_1000; // MOV R2, R0 R2 = 63
-        mem_data[5] = 8'b0000_1001; // ADD R2, R1
-        mem_data[6] = 8'b0001_1000; // SUB R2, R0
-        mem_data[7] = 8'b0010_1001; // AND R2, R1
-        mem_data[8] = 8'b0011_1000; // OR R2, R0
-        mem_data[9] = 8'b0100_1001; // XOR R2, R1
+        mem_data[4] = 8'b0110_1000; // MOV R2, R0 
+//        mem_data[5] = 8'b0001_1001; // ADD R2, R1
+//        mem_data[6] = 8'b0010_1000; // SUB R2, R0
+//        mem_data[7] = 8'b0011_1001; // AND R2, R1
+//        mem_data[8] = 8'b0100_1000; // OR R2, R0
+//        mem_data[9] = 8'b0101_1001; // XOR R2, R1
 
         // Initialize remaining memory to zero
         for (i = 8; i < 256; i = i + 1) begin

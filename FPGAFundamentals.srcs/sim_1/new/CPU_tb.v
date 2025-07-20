@@ -36,9 +36,9 @@ initial begin
 end
     
         integer cycles;
-    initial begin
-        for (cycles = 0; cycles < 29; cycles = cycles + 1) begin
-            @(posedge clk);
+         initial begin
+        for (cycles = 0; cycles < 60; cycles = cycles + 1) begin
+             @(posedge clk);
         end
 
         $finish;

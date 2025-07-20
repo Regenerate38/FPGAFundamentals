@@ -41,59 +41,70 @@ module control_unit(
             //DECODE and EXECUTE
             2'b01: begin
                 case(instruction[7:4])
-                   4'b0000: begin // ADD RD, RS
+                   4'b0001: begin // ADD RD, RS
                         reg_read_addr1 = {6'b0, instruction[3:2]};
                         reg_read_addr2 = {6'b0, instruction[1:0]};
                         alu_op = 4'b0000;
                         reg_write_addr = {6'b0, instruction[3:2]};
                         next_state = 2'b11;
                    end
-                   4'b0001: begin // SUB RD, RS
+                   4'b0010: begin // SUB RD, RS
                         reg_read_addr1 = {6'b0, instruction[3:2]};
                         reg_read_addr2 = {6'b0, instruction[1:0]};
                         alu_op = 4'b0001;
                         reg_write_addr = {6'b0, instruction[3:2]};
                         next_state = 2'b11;
                    end
-                   4'b0010: begin // AND RD, RS
+                   4'b0011: begin // AND RD, RS
                         reg_read_addr1 = {6'b0, instruction[3:2]};
                         reg_read_addr2 = {6'b0, instruction[1:0]};
                         alu_op = 4'b0100;
                         reg_write_addr = {6'b0, instruction[3:2]};
                         next_state = 2'b11;
                    end
-                   4'b0011: begin // OR RD, RS
+                   4'b0100: begin // OR RD, RS
                         reg_read_addr1 = {6'b0, instruction[3:2]};
                         reg_read_addr2 = {6'b0, instruction[1:0]};
                         alu_op = 4'b0101;
                         reg_write_addr = {6'b0, instruction[3:2]};
                         next_state = 2'b11;
                    end
-                   4'b0100: begin // XOR RD, RS
+                   4'b0101: begin // XOR RD, RS
                         reg_read_addr1 = {6'b0, instruction[3:2]};
                         reg_read_addr2 = {6'b0, instruction[1:0]};
                         alu_op = 4'b0111;
                         reg_write_addr = {6'b0, instruction[3:2]};
                         next_state = 2'b11;
                    end
-                   4'b0101: begin // MOV RD, RS
+                   4'b0110: begin // MOV RD, RS
                         reg_read_addr1 = {6'b0, instruction[1:0]};
                         reg_read_addr2 = 8'b0;
                         reg_write_addr = {6'b0, instruction[3:2]};
-                        alu_op = 4'b1111; 
+                        alu_op = 4'b1111;  // random alu op
                         next_state = 2'b11;
                    end                     
-                   4'b0110: begin // LOADI RD, #imm
+                   4'b0111: begin // LOADI RD, #imm
                         pc_inc = 1;
                         reg_write_addr = {6'b0, instruction[3:2]};
+                        alu_op = 4'b1111;  // random alu op
                         next_state = 2'b10;
                    end
                   
-                   4'b0111: begin // JMP RD
+                   4'b1000: begin // JMP RD
                         pc_enable = 1;
                         jmp_addr = {6'b0, instruction[3:2]};
                         next_state = 2'b00;
                    end
+                   4'b0000: begin // NOP
+                        alu_op = 4'b1111;
+                        next_state = 2'b00;
+                   end
+                   
+//                   4'b1111: begin // HALT
+//                        halt = 0;
+//                        pc_enable =0;
+//                        pc_inc = 0;
+//                   end
                   
                    default: begin
                         next_state = 2'b00;

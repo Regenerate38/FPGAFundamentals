@@ -88,7 +88,7 @@ module CPU(
     always @(posedge clk or posedge rst) begin
         if (rst)
             loadi_in_flight <= 1'b0;
-        else if (state == 2'b01 && instr_reg_out[7:4] == 4'b0110)
+        else if (state == 2'b01 && instr_reg_out[7:4] == 4'b0111)
             loadi_in_flight <= 1'b1;
         else if (state == 2'b11)
             loadi_in_flight <= 1'b0;
@@ -97,7 +97,7 @@ module CPU(
         always @(posedge clk or posedge rst) begin
             if (rst)
                 loadi_dest_reg <= 8'b0;
-            else if (state == 2'b01 && instr_reg_out[7:4] == 4'b0110)
+            else if (state == 2'b01 && instr_reg_out[7:4] == 4'b0111)
                 loadi_dest_reg <= {6'b0, instr_reg_out[3:2]};
         end
 
@@ -105,7 +105,7 @@ module CPU(
     always @(posedge clk or posedge rst) begin
         if (rst)
             alu_mov_dest_reg <= 8'b0;
-        else if (state == 2'b01 && instr_reg_out[7:4] != 4'b0110)
+        else if (state == 2'b01 && instr_reg_out[7:4] != 4'b0111)
             alu_mov_dest_reg <= {6'b0, instr_reg_out[3:2]};
     end
 

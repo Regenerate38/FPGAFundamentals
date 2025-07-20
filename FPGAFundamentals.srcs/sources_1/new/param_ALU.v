@@ -60,6 +60,7 @@ module param_ALU #(
     4'b0111: logic_result = A ^ B; // XOR
     4'b1000: logic_result = (A << B); // Logical Shift Left
     4'b1001: logic_result = (A >> B); // Logical Shift Right
+    4'b1001: ;
     default: begin
                  logic_result = 0;
                  arith_result = 0;
