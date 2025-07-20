@@ -3,7 +3,9 @@
 module CPU(
     input clk,
     input rst,
-    output [7:0] pc_out
+    output [7:0] pc_out,
+        wire [7:0] reg_read_data1,
+    wire [7:0] reg_read_data2
 );
 
     wire [7:0] instruction;
@@ -17,8 +19,7 @@ module CPU(
     wire [7:0] jmp_addr;
     wire [7:0] imm_value;
 
-    wire [7:0] reg_read_data1;
-    wire [7:0] reg_read_data2;
+
     wire [7:0] alu_result;
 
     wire alu_cout;
