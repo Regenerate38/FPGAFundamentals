@@ -15,17 +15,35 @@ module control_unit(
     input rst,
     input clk
 );
-
+    reg [3:0] latched_alu_op;
+reg [7:0] latched_reg_write_addr;
+reg [7:0] latched_reg_read_addr1, latched_reg_read_addr2;
     reg [1:0] next_state;
    // FETCH=00 , DECODE & EXECUTE=01, INDIRECT=10, WRITE RESULT = 11
 
+always @(posedge clk or posedge rst) begin
+    if (rst) begin
+        latched_alu_op         <= 4'b0;
+        latched_reg_write_addr <= 8'b0;
+        latched_reg_read_addr1 <= 8'b0;
+        latched_reg_read_addr2 <= 8'b0;
+    end else if (state == 2'b01) begin // Latch in DECODE
+        latched_alu_op         <= alu_op;
+        latched_reg_write_addr <= reg_write_addr;
+        latched_reg_read_addr1 <= reg_read_addr1;
+        latched_reg_read_addr2 <= reg_read_addr2;
+    end
+end
+
+    
     always @(*) begin
         alu_op = 4'b1110;
         reg_write_en = 0;           
         reg_write_addr = 8'b0;      
         reg_read_addr1 = 8'b0;      
         reg_read_addr2 = 8'b0;
-        pc_enable = 0;              
+        pc_enable = 0;           
+           
         jmp_addr = 8'b0;
         pc_inc = 0;                 
         imm_value = 8'b0;
@@ -122,10 +140,12 @@ module control_unit(
             end
             //WRITE RESULT
             2'b11: begin
-                reg_write_en = 1;
-                alu_op = alu_op;
-                reg_write_addr = reg_write_addr; 
-                next_state = 2'b00;
+                 reg_write_en = 1;
+                 reg_read_addr1 = latched_reg_read_addr1;
+                 reg_read_addr2 = latched_reg_read_addr2;
+                 alu_op = latched_alu_op;
+                 reg_write_addr = latched_reg_write_addr;
+                 next_state = 2'b00;
             end 
             
             default: next_state = 2'b00;            
