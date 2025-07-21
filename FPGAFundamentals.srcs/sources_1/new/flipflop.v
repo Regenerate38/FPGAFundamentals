@@ -21,17 +21,20 @@ endmodule
 
 
 module d_flipflop(
-    output wire Q,
+    output reg Q,
     output wire Q_bar,
     input wire D,
     input wire CLK
     );
-    wire S = D;
-    wire R = ~D;
-    sr_flipflop d (
-    .S(S), .R(R), .CLK(CLK), .Q(Q), .Q_bar(Q_bar)
-    );
-    
+//    wire S = D;
+//    wire R = ~D;
+//    sr_flipflop d (
+//    .S(S), .R(R), .CLK(CLK), .Q(Q), .Q_bar(Q_bar)
+//    );
+   assign Q_bar = ~Q;
+   always @(posedge CLK) begin
+        Q <= D;
+    end
 endmodule
 
 
