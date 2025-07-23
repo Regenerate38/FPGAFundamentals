@@ -23,6 +23,7 @@ endmodule
 module d_flipflop(
     output reg Q,
     output wire Q_bar,
+    input wire RST,
     input wire D,
     input wire CLK
     );
@@ -32,8 +33,9 @@ module d_flipflop(
 //    .S(S), .R(R), .CLK(CLK), .Q(Q), .Q_bar(Q_bar)
 //    );
    assign Q_bar = ~Q;
-   always @(posedge CLK) begin
-        Q <= D;
+   always @(posedge CLK or posedge RST) begin
+        if (RST) Q <= 0;
+        else Q <= D;
     end
 endmodule
 
