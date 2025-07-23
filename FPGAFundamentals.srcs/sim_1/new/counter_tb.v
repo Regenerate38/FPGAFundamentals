@@ -1,11 +1,11 @@
 `timescale 1ns / 1ps
 
 module counter_tb;
-    reg CLK;
-    wire Q0, Q1, Q2, Q3;
+    reg CLK, RST;
+    wire [3:0] OUT;
     
-    bin_counter uut (
-        .CLK(CLK), .Q0(Q0), .Q1(Q1), .Q2(Q2), .Q3(Q3)
+    bin_down_counter uut (
+        .CLK(CLK), .RST(RST), .OUT(OUT)
         );
     initial begin
         CLK = 0;
@@ -13,6 +13,10 @@ module counter_tb;
     end
     
     initial begin
+        RST = 1;
+        @(posedge CLK);
+        RST = 0;
+        @(posedge CLK);
         #200;
         $finish;
     end

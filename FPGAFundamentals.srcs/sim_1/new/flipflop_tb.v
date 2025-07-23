@@ -57,8 +57,10 @@ module flipflop_tb;
     endtask
 
     initial begin
-    RST = 0;
+    RST = 1;
     @(posedge CLK);
+    RST = 0;
+    @(posedge CLK)
     din_d(1);
     din_d(0);
     din_d(1);
