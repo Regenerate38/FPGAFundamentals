@@ -5,7 +5,9 @@ module clock_divider_tb;
     reg RST;
     wire Q;
     
-    clock_divider uut (
+    clock_divider #(
+         .N(4)
+    ) uut (
         .CLK(CLK), .RST(RST), .Q(Q)
     );
     initial CLK = 1;
@@ -15,7 +17,7 @@ module clock_divider_tb;
         @(posedge CLK);
         RST = 0;
         @(posedge CLK);
-        #100;
+        #1000;
         $finish;
     end
 endmodule
