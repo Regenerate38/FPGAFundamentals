@@ -6,19 +6,19 @@ This repository contains practice projects and experiments with FPGA development
 
 - **8-bit CPU**  
   A simple 8-bit CPU implementation demonstrating fundamental concepts of processor design such as ALU, registers, instruction decoding, and clocking.  
-  Source file: [`CPU.v`](https://github.com/<Username>/FPGAFundamentals/blob/main/FPGAFundamentals.srcs/sources_1/new/CPU.v)
+  Source file: [`CPU.v`](https://github.com/Regenerate38/FPGAFundamentals/blob/main/FPGAFundamentals.srcs/sources_1/new/CPU.v)
 
 - **Sequence Detector**  
   Finite state machine detecting specific bit patterns in a serial input stream.  
-  Source file: [`seq_detector.v`](https://github.com/<Username>/FPGAFundamentals/blob/main/FPGAFundamentals.srcs/sources_1/new/seq_detector.v)
+  Source file: [`seq_detector.v`](https://github.com/Regenerate38/FPGAFundamentals/blob/main/FPGAFundamentals.srcs/sources_1/new/seq_detector.v)
 
 - **Clock Divider**  
   Module to generate a slower clock signal from a faster system clock, useful for timing and control.  
-  Source file: [`clock_divider.v`](https://github.com/<Username>/FPGAFundamentals/blob/main/FPGAFundamentals.srcs/sources_1/new/clock_divider.v)
+  Source file: [`clock_divider.v`](https://github.com/Regenerate38/FPGAFundamentals/blob/main/FPGAFundamentals.srcs/sources_1/new/clock_divider.v)
 
 - **UART (Universal Asynchronous Receiver/Transmitter)**  
   UART module implementing serial communication protocol for data transmission and reception.  
-  Source file: [`uart.v`](https://github.com/<Username>/FPGAFundamentals/blob/main/FPGAFundamentals.srcs/sources_1/new/uart.v)
+  Source file: [`uart.v`](https://github.com/Regenerate38/FPGAFundamentals/blob/main/FPGAFundamentals.srcs/sources_1/new/uart.v)
 
 
 ## Directory Structure
